@@ -1,34 +1,63 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import Tricks from './Tricks'
+import Playlists from './Playlists'
+import Users from './Users'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [activePage, setActivePage] = useState('home')
+
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen)
+  }
+
+  const handleMenuSelect = (page) => {
+    setActivePage(page)
+    setDrawerOpen(false) // Optionally close the drawer after selection
+  }
+
+  // Helper to get the page title
+  const getPageTitle = () => {
+    switch(activePage) {
+      case 'tricks': return 'Tricks'
+      case 'playlists': return 'Playlists'
+      case 'users': return 'Users'
+      default: return 'Home'
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="app-container">
+      <div className={`drawer ${drawerOpen ? 'open' : ''}`}>
+        <button className="close-btn" onClick={toggleDrawer}>
+          <span className="material-icons">close</span>
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+        <ul className="menu-list">
+          <li onClick={() => handleMenuSelect('home')}>Home</li>
+          <li onClick={() => handleMenuSelect('tricks')}>Tricks</li>
+          <li onClick={() => handleMenuSelect('playlists')}>Playlists</li>
+          <li onClick={() => handleMenuSelect('users')}>Users</li>
+        </ul>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+
+      <div className="content">
+        {/* App bar */}
+        <header className="app-bar">
+          <button className="menu-icon" onClick={toggleDrawer}>
+            <span className="material-icons">menu</span>
+          </button>
+          <h2>{getPageTitle()}</h2>
+        </header>
+
+        <main>
+          {activePage === 'home' && <h1>Welcome to our website!</h1>}
+          {activePage === 'tricks' && <Tricks />}
+          {activePage === 'playlists' && <Playlists />}
+          {activePage === 'users' && <Users />}
+        </main>
+      </div>
+    </div>
   )
 }
 

@@ -5,38 +5,78 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.app-container {
+  display: flex;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Drawer styles */
+.drawer {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100vh;
+  background-color: #464646;
+  padding: 0px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+  transition: left 0.3s ease;
+  z-index: 1101;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.drawer.open {
+  left: 0;
 }
 
-.card {
-  padding: 2em;
+.drawer .close-btn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  margin-bottom: 20px;
+  cursor: pointer;
 }
 
-.read-the-docs {
-  color: #888;
+.menu-list {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-list li {
+  margin: 15px 0;
+  cursor: pointer;
+}
+
+/* Content styles */
+.content {
+  flex: 1;
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+  padding: 0px;
+  margin-top: 32px; /* added to prevent overlap with fixed app bar */
+}
+
+/* App bar styles */
+.app-bar {
+  display: flex;
+  align-items: center;
+  background-color: #384666;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw; 
+  height: 64px;
+  z-index: 1100;
+}
+
+.app-bar .menu-icon {
+  display: inline-flex;      /* make the button a flex container */
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.app-bar .menu-icon .material-icons {
+  font-size: 32px;
 }
