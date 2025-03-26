@@ -6,13 +6,35 @@ $database = "d03ddb7f";
 
 $login_key = "U9PHjG7xfmN2dEWFtwXxxy4ewGtGBWh3UCDHN6dSFiUUMytJ";
 
+// Allow from any origin
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+	// Decide if the origin in $_SERVER['HTTP_ORIGIN'] is one
+	// you want to allow, and if so:
+	header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+	header('Access-Control-Allow-Credentials: true');
+	header('Access-Control-Max-Age: 86400');    // cache for 1 day
+}
+
+// Access-Control headers are received during OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+
+	if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+		// may also be using PUT, PATCH, HEAD etc
+		header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+
+	if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+		header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+
+	exit(0);
+}
+
 // Create connection
 $mysql = new mysqli($servername, $username, $password, $database);
 // Check connection
 if ($mysql->connect_error) {
   die("Connection failed: " . $mysql->connect_error);
 }
-//echo "Database connected successfully\n";
+// echo "Database connected successfully\n";
 
 // checks if the username of the basic auth exists and if the passwords hash matches the one in the database, sets $account_id and $is_public
 $account_id = 0;
@@ -77,17 +99,6 @@ function GetNextGId() : int {
 	$row = $result->fetch_array(MYSQLI_ASSOC);
 	return $row["Auto_increment"];
 }
-// Returns the next free c_id
-function GetNextCId() : int {
-	global $mysql;
-	$stmt = $mysql->prepare('SHOW TABLE STATUS LIKE "Combos"');
-	$stmt->execute();
-	$result = $stmt->get_result();
-	$stmt->close();
-	$row = $result->fetch_array(MYSQLI_ASSOC);
-	return $row["Auto_increment"];
-}
-
 // returns the username of an account with the specified id
 function GetUsername($user_id) : string {
 	global $mysql;
@@ -110,6 +121,24 @@ function GetTrickNamesForUser($username) : string {
 		return "ERROR: Username not found";
 	}
 	$stmt = $mysql->prepare("SELECT t1.name, CASE WHEN t2.ref_id IS NOT NULL THEN 1 ELSE 0 END AS landed FROM Tricks t1 LEFT JOIN UserTricks t2 ON t1.g_id = t2.ref_id AND t2.owner_id = ? WHERE t1.invisible = 0;");
+	$stmt->bind_param("i", $user_id);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$stmt->close();
+	$rows = $result->fetch_all(MYSQLI_ASSOC);
+	return json_encode($rows);
+}
+// Returns for all tricks: id,name,landed,date,liked,wishlisted
+/**
+[{id:1,name:"180 unispin",landed:1,date:"2024-02-10",liked:0,wishlisted:1},{...},...]
+**/
+function GetTrickListForUser($username) : string {
+	global $mysql;
+	$user_id = GetIdOfUser($username);
+	if (!isset($user_id)) {
+		return "ERROR: Username not found";
+	}
+	$stmt = $mysql->prepare('SELECT t1.g_id, t1.name, CASE WHEN t2.ref_id IS NOT NULL THEN t2.liked ELSE 0 END AS liked, CASE WHEN t2.ref_id IS NOT NULL THEN t2.wishlisted ELSE 0 END AS wishlisted, CASE WHEN t2.ref_id IS NOT NULL THEN t2.landed_on ELSE "0000-00-00" END AS landed_on, CASE WHEN t2.ref_id IS NOT NULL THEN t2.landed ELSE 0 END AS landed FROM Tricks t1 LEFT JOIN UserTricks t2 ON t1.g_id = t2.ref_id AND t2.owner_id = ? WHERE t1.invisible = 0;');
 	$stmt->bind_param("i", $user_id);
 	$stmt->execute();
 	$result = $stmt->get_result();
