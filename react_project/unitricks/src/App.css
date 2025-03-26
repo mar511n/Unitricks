@@ -57,10 +57,13 @@
 
 /* Content styles */
 .content {
-  flex: 1;
-  margin-left: 0;
+  position: absolute;
+  left: 0;
+  overflow: auto;
+  width: 100%;
+  margin: 0;
   transition: margin-left 0.3s ease;
-  padding: 0px;
+  padding: 0;
   margin-top: 32px; /* added to prevent overlap with fixed app bar */
 }
 
@@ -72,8 +75,9 @@
   color: white;
   position: fixed;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  /*left: 50%;
+  transform: translateX(-50%);*/
   width: 100vw; 
   height: 64px;
   z-index: 1100;
@@ -148,11 +152,11 @@
 
 .account-header {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .account-buttons > *:not(:last-child) {
   display: table-row;
   margin-right: 1rem; 
-  margin-top: 1rem;
+  margin-top: 0;
 }

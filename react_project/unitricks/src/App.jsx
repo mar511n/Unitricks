@@ -5,6 +5,7 @@ import Tricks from './Tricks'
 import Playlists from './Playlists'
 import Users from './Users'
 import MatIcon from './icon';
+import {CallBackendFunc} from './backend'
 import './App.css'
 import axios from "axios";
 
@@ -28,6 +29,7 @@ function App() {
 
   const handleMenuSelect = (page) => {
     setActivePage(page)
+    cookies.set('activePage', page, { path: '/' })
     setDrawerOpen(false) // Optionally close the drawer after selection
   }
 
@@ -83,6 +85,19 @@ function App() {
     if (usernameCookie && passwordCookie) {
       handleLogin(usernameCookie, passwordCookie);
     }
+
+    const activePageCookie = cookies.get('activePage');
+    if (activePageCookie) {
+      setActivePage(activePageCookie)
+    }
+
+    /**
+    const test = async () => {
+      const response = await CallBackendFunc(databaseWebsite, usernameCookie, passwordCookie, 'GetTrickListForUser', ['marvin']);
+      console.log('response:', response.status, response.data[0].name);
+    }
+    test();
+    */
   }, [])
 
   useEffect(() => {
@@ -147,7 +162,7 @@ function App() {
 
         <main>
           {activePage === 'home' && <h1>Welcome to our website!</h1>}
-          {activePage === 'tricks' && <Tricks />}
+          {activePage === 'tricks' && <Tricks databaseWebsite={databaseWebsite} username={username} password={password} loginStatus={loginStatus}/>}
           {activePage === 'playlists' && <Playlists />}
           {activePage === 'users' && <Users />}
           {activePage === 'settings' && <h1>Settings Page</h1>}
@@ -183,7 +198,7 @@ function App() {
         {accountPopupOpen && (
           <div className="account-modal-content">
             <h2 className="account-header">Account</h2>
-            <span className='account-name'>{loginStatus ? "Logged in as " + username : ""}</span>
+            <p className='account-name'>{loginStatus ? "Logged in as " + username : ""}</p>
             <div className="account-buttons">
               <button onClick={() => setAccountPopupOpen(false)}><MatIcon icon="close"></MatIcon></button>
               <button onClick={() => {

@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 	if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
 		header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-
+	
 	exit(0);
 }
 
@@ -169,7 +169,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	}else{
 		echo "Access denied";
 	}
-}else if ($hasaccess && $_SERVER["REQUEST_METHOD"] == "PUT") {
+}else if ($hasaccess && $_SERVER["REQUEST_METHOD"] == "POST") {
 	parse_str($_SERVER['QUERY_STRING'], $query);
 	if (array_key_exists('fname',$query)) {
 		$json = file_get_contents('php://input');

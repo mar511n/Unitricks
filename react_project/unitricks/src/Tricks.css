@@ -1,0 +1,50 @@
+.tricks-container {
+    position: relative;
+    left: 0;
+    height: calc(100vh - 100px); /* Adjusted to account for the app bar height */
+    margin: 0px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.search-input {
+    flex: 1;
+    padding: 5px;
+}
+
+.tricks-table-container {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.tricks-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tricks-table th, .tricks-table td {
+  border: 1px solid #8a8a8a;
+  padding: 8px;
+  text-align: left;
+}
+
+.tricks-table th {
+  background-color: #3f3f3f;
+  font-weight: bold;
+}
+
+.tricks-table tr:hover {
+  background-color: #3b3b3b;
+}
+
+.trick-row td {
+  padding: 10px;
+}
