@@ -1,13 +1,2 @@
-tags sollen in liste sichtbar sein
-filtern nach tags
-suchen nach id/tags soll auch gehen
-sortieren nach spalten
-
-farbschema is kaputt im whitemode
-
-statt wishlist & landed -> landed = 0/1/2 = nicht gelanded, wishlist, gelanded
-icons für spalten namen
-
-
-tags: category & modifier
-JSON für listen, .... in datenbank
+siehe
+https://unitricks.miraheze.org/wiki/Main_Page
